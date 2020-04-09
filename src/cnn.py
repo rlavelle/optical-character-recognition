@@ -29,7 +29,7 @@ class CNN:
     def get_model(self):
         model = keras.Sequential([
             keras.layers.Conv2D(14, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-            keras.layers.Conv2D(28, (3, 3), activation='relu'),
+            keras.layers.Conv2D(28, (5, 5), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
             keras.layers.Flatten(input_shape=(28,28)),
