@@ -4,7 +4,11 @@ from data import DataPreprocess
 
 
 class CNN:
+<<<<<<< HEAD
     def __init__(self,load=False):
+=======
+    def __init__(self):
+>>>>>>> 36cba9cb5654d232d1043c60f153f1d4feb05cb5
         self.learning_rate = 0.005
         self.epochs = 100
         self.weights_path = "training_model/cp.ckpt"
@@ -37,9 +41,15 @@ class CNN:
     def get_model(self):
         model = keras.Sequential([
             keras.layers.Conv2D(14, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+<<<<<<< HEAD
             keras.layers.Conv2D(28, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Conv2D(28, (3, 3), activation='relu'),
+=======
+            keras.layers.Conv2D(28, (5, 5), activation='relu'),
+>>>>>>> 36cba9cb5654d232d1043c60f153f1d4feb05cb5
+            keras.layers.MaxPool2D(pool_size=(2, 2)),
+            keras.layers.Conv2D(28, (7, 7), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
             keras.layers.Flatten(input_shape=(28,28)),
