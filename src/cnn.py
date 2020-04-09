@@ -6,8 +6,8 @@ from data import DataPreprocess
 class CNN:
     def __init__(self,load=False):
         self.learning_rate = 0.005
-        self.epochs = 100
-        self.weights_path = "training_model/cp.ckpt"
+        self.epochs = 150
+        self.weights_path = "trained_model/model1.ckpt"
 
         self.x_test = self.y_test = None
         self.x_train = self.y_train = None
@@ -36,10 +36,10 @@ class CNN:
 
     def get_model(self):
         model = keras.Sequential([
-            keras.layers.Conv2D(14, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+            keras.layers.Conv2D(56, (3, 3), input_shape=(28, 28, 1), activation='relu'),
             keras.layers.Conv2D(28, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
-            keras.layers.Conv2D(28, (3, 3), activation='relu'),
+            keras.layers.Conv2D(14, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
             keras.layers.Flatten(input_shape=(28,28)),
@@ -62,7 +62,7 @@ class CNN:
         return model
 
     def train(self):
-        cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=self.weights_path,ave_weights_only=True,verbose=1)
+        cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=self.weights_path,save_weights_only=True,verbose=1)
         self.model.fit(self.x_train, self.y_train, epochs=self.epochs, callbacks=[cp_callback])
 
     def test(self):
