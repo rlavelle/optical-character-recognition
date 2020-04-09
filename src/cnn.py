@@ -71,7 +71,7 @@ class CNN:
 
 
 if __name__ == "__main__":
-    cnn = CNN(load=True)
+    cnn = CNN(load=False)
     cnn.load_data()
     cnn.train()
     print("DONE TRAINING")
