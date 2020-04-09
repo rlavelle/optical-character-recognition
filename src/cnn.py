@@ -1,6 +1,7 @@
 from tensorflow import keras
 from data import DataPreprocess
 
+
 class CNN:
     def __init__(self):
         self.learning_rate = 0.005
