@@ -1,15 +1,17 @@
 from tensorflow import keras
+import tensorflow as tf
 from data import DataPreprocess
 
 
 class CNN:
-    def __init__(self):
-        self.learning_rate = 0.001
+    def __init__(self,load=False):
+        self.learning_rate = 0.005
         self.epochs = 100
+        self.weights_path = "training_model/cp.ckpt"
 
         self.x_test = self.y_test = None
         self.x_train = self.y_train = None
-        self.model = self.get_model()
+        self.model = self.load_model() if load else self.get_model()
 
     def load_data(self):
         dp = DataPreprocess()
@@ -27,12 +29,17 @@ class CNN:
         self.y_train = keras.utils.to_categorical(self.y_train, 26)
         self.y_test = keras.utils.to_categorical(self.y_test, 26)
 
+    def load_model(self):
+        model = self.get_model()
+        model.load_weights(self.weights_path)
+        return model
+
     def get_model(self):
         model = keras.Sequential([
-            keras.layers.Conv2D(28, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-            keras.layers.Conv2D(56, (5, 5), activation='relu'),
+            keras.layers.Conv2D(14, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+            keras.layers.Conv2D(28, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
-            keras.layers.Conv2D(28, (5, 5), activation='relu'),
+            keras.layers.Conv2D(28, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
             keras.layers.Flatten(input_shape=(28,28)),
@@ -55,7 +62,8 @@ class CNN:
         return model
 
     def train(self):
-        self.model.fit(self.x_train, self.y_train, epochs=self.epochs)
+        cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=self.weights_path,ave_weights_only=True)
+        self.model.fit(self.x_train, self.y_train, epochs=self.epochs, callbacks=[cp_callback])
 
     def test(self):
         accuracy = self.model.evaluate(self.x_test, self.y_test, verbose=False)[1]
@@ -63,7 +71,7 @@ class CNN:
 
 
 if __name__ == "__main__":
-    cnn = CNN()
+    cnn = CNN(load=True)
     cnn.load_data()
     cnn.train()
     print("DONE TRAINING")
