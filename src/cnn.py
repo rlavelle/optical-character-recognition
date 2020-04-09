@@ -53,7 +53,7 @@ class CNN:
         self.model.fit(self.x_train, self.y_train, epochs=self.epochs)
 
     def test(self):
-        accuracy = self.model.evaluate(self.x_test, self.y_test)[1]
+        accuracy = self.model.evaluate(self.x_test, self.y_test, verbose=False)[1]
         print("accuracy: %" + str(accuracy * 100))
 
 
