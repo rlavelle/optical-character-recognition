@@ -5,7 +5,7 @@ from data import DataPreprocess
 class CNN:
     def __init__(self):
         self.learning_rate = 0.005
-        self.epochs = 50
+        self.epochs = 100
 
         self.x_test = self.y_test = None
         self.x_train = self.y_train = None
@@ -29,8 +29,8 @@ class CNN:
 
     def get_model(self):
         model = keras.Sequential([
-            keras.layers.Conv2D(14, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-            keras.layers.Conv2D(28, (5, 5), activation='relu'),
+            keras.layers.Conv2D(28, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+            keras.layers.Conv2D(56, (5, 5), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Conv2D(28, (5, 5), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
