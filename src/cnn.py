@@ -4,7 +4,7 @@ from data import DataPreprocess
 class CNN:
     def __init__(self):
         self.learning_rate = 0.01
-        self.epochs = 10
+        self.epochs = 20
 
         self.x_test = self.y_test = None
         self.x_train = self.y_train = None
