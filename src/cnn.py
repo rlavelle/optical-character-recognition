@@ -1,11 +1,10 @@
 from tensorflow import keras
 from data import DataPreprocess
 
-
 class CNN:
     def __init__(self):
         self.learning_rate = 0.01
-        self.epochs = 25
+        self.epochs = 10
 
         self.x_test = self.y_test = None
         self.x_train = self.y_train = None
@@ -14,6 +13,9 @@ class CNN:
     def load_data(self):
         dp = DataPreprocess()
         self.x_train,self.y_train,self.x_test,self.y_test = dp.pre_process()
+
+        self.x_train = self.x_train.reshape(self.x_train.shape[0],28,28,1)
+        self.x_test = self.x_test.reshape(self.x_test.shape[0],28,28,1)
 
         self.y_train = self.y_train.reshape(self.y_train.shape[0],1)
         self.y_test = self.y_test.reshape(self.y_test.shape[0],1)
@@ -26,6 +28,8 @@ class CNN:
 
     def get_model(self):
         model = keras.Sequential([
+            keras.layers.Conv2D(28, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+            keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Flatten(input_shape=(28,28)),
             keras.layers.Dense(784, activation='relu'),
             keras.layers.Dense(392, activation='relu'),
