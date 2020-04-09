@@ -62,7 +62,7 @@ class CNN:
         return model
 
     def train(self):
-        cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=self.weights_path,ave_weights_only=True)
+        cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=self.weights_path,ave_weights_only=True,verbose=1)
         self.model.fit(self.x_train, self.y_train, epochs=self.epochs, callbacks=[cp_callback])
 
     def test(self):
