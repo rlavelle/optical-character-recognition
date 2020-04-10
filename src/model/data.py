@@ -35,10 +35,10 @@ label_to_letter = {
 
 class DataPreprocess:
     def __init__(self):
-        self.train_file_labels = '../data/emnist-letters-train-labels-idx1-ubyte'
-        self.train_file_imgs = '../data/emnist-letters-train-images-idx3-ubyte'
-        self.test_file_labels = '../data/emnist-letters-test-labels-idx1-ubyte'
-        self.test_file_imgs = '../data/emnist-letters-test-images-idx3-ubyte'
+        self.train_file_labels = 'data/emnist-letters-train-labels-idx1-ubyte'
+        self.train_file_imgs = 'data/emnist-letters-train-images-idx3-ubyte'
+        self.test_file_labels = 'data/emnist-letters-test-labels-idx1-ubyte'
+        self.test_file_imgs = 'data/emnist-letters-test-images-idx3-ubyte'
 
         self.x_train = idx2numpy.convert_from_file(self.train_file_imgs)
         self.y_train = idx2numpy.convert_from_file(self.train_file_labels)
