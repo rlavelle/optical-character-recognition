@@ -1,6 +1,9 @@
 from tensorflow import keras
 import tensorflow as tf
+import numpy as np
 from data import DataPreprocess
+from data import label_to_letter
+import cv2 as cv
 
 
 class CNN:
@@ -16,18 +19,6 @@ class CNN:
     def load_data(self):
         dp = DataPreprocess()
         self.x_train,self.y_train,self.x_test,self.y_test = dp.pre_process()
-
-        self.x_train = self.x_train.reshape(self.x_train.shape[0],28,28,1)
-        self.x_test = self.x_test.reshape(self.x_test.shape[0],28,28,1)
-
-        self.y_train = self.y_train.reshape(self.y_train.shape[0],1)
-        self.y_test = self.y_test.reshape(self.y_test.shape[0],1)
-
-        self.y_train = self.y_train-1
-        self.y_test = self.y_test-1
-
-        self.y_train = keras.utils.to_categorical(self.y_train, 26)
-        self.y_test = keras.utils.to_categorical(self.y_test, 26)
 
     def load_model(self):
         model = self.get_model()
@@ -69,10 +60,30 @@ class CNN:
         accuracy = self.model.evaluate(self.x_test, self.y_test, verbose=False)[1]
         print("accuracy: %" + str(accuracy * 100))
 
+    def predict(self, letter_img):
+        return np.argmax(self.model.predict(letter_img))
+
 
 if __name__ == "__main__":
+    def show_image(cnn,i):
+        def imshow(x, y):
+            def rotate(img):
+                return cv.flip(cv.rotate(img, cv.ROTATE_90_CLOCKWISE), 1)
+            img = rotate(x)
+            cv.imshow(label_to_letter[y], img)
+            cv.waitKey()
+        letter_img = cnn.x_test[i]
+        letter = cnn.y_test[i]
+        print(label_to_letter[np.argmax(letter) + 1])
+        letter_img_pred = letter_img.reshape(1, 28, 28, 1)
+        letter_img_disp = letter_img.reshape(28, 28)
+        letter_pred = cnn.predict(letter_img_pred)
+        imshow(letter_img_disp, letter_pred + 1)
+
     cnn = CNN(load=False)
     cnn.load_data()
     cnn.train()
     print("DONE TRAINING")
     cnn.test()
+
+    #show_image(cnn, 20000)

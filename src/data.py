@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+from tensorflow import keras
 import idx2numpy
 
 label_to_letter = {
@@ -57,6 +58,18 @@ class DataPreprocess:
             return (image - np.mean(image)) / (np.std(image))
 
         self.x_train, self.x_test = normalize(self.x_train), normalize(self.x_test)
+
+        self.x_train = self.x_train.reshape(self.x_train.shape[0],28,28,1)
+        self.x_test = self.x_test.reshape(self.x_test.shape[0],28,28,1)
+
+        self.y_train = self.y_train.reshape(self.y_train.shape[0],1)
+        self.y_test = self.y_test.reshape(self.y_test.shape[0],1)
+
+        self.y_train = self.y_train-1
+        self.y_test = self.y_test-1
+
+        self.y_train = keras.utils.to_categorical(self.y_train, 26)
+        self.y_test = keras.utils.to_categorical(self.y_test, 26)
         return self.x_train,self.y_train,self.x_test,self.y_test
 
     def get_data(self):
