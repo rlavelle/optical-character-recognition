@@ -49,7 +49,7 @@ class CharSegmentation:
             x, y, w, h = cv.boundingRect(c)
             # Getting line image
             self.chars.append(self.word[y:y + h, x:x + w])
-            cv.rectangle(self.word, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            #cv.rectangle(self.word, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         # debug
         cv.imshow("boxed", self.word)
