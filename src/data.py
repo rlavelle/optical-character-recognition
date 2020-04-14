@@ -47,27 +47,40 @@ class DataPreprocess:
 
     def imshow(self,i,x,y):
         img = self.rotate(x[i])
+        img = x[i]
         cv.imshow(label_to_letter[y[i]], img)
         cv.waitKey()
 
+    # rotate the image clockwise and flip over y axis
     def rotate(self,img):
         return cv.flip(cv.rotate(img, cv.ROTATE_90_CLOCKWISE), 1)
 
+    # pre process the image
     def pre_process(self):
+        # normalize [x-mean(x)]/std(x)
         def normalize(image):
             return (image - np.mean(image)) / (np.std(image))
 
+        # threshold the image
+        self.x_train = np.uint8((self.x_train > 0) * 255)
+        self.x_test = np.uint8((self.x_test > 0) * 255)
+
+        # call normalize function
         self.x_train, self.x_test = normalize(self.x_train), normalize(self.x_test)
 
+        # reshape for network
         self.x_train = self.x_train.reshape(self.x_train.shape[0],28,28,1)
         self.x_test = self.x_test.reshape(self.x_test.shape[0],28,28,1)
 
+        # reshape for network
         self.y_train = self.y_train.reshape(self.y_train.shape[0],1)
         self.y_test = self.y_test.reshape(self.y_test.shape[0],1)
 
+        # fix labels
         self.y_train = self.y_train-1
         self.y_test = self.y_test-1
 
+        # get categorical outputs
         self.y_train = keras.utils.to_categorical(self.y_train, 26)
         self.y_test = keras.utils.to_categorical(self.y_test, 26)
         return self.x_train,self.y_train,self.x_test,self.y_test
@@ -79,5 +92,6 @@ class DataPreprocess:
 if __name__ == "__main__":
     dp = DataPreprocess()
     x_train,y_train,x_test,y_test = dp.get_data()
-    print(x_train.shape)
-    dp.imshow(87569,x_train,y_train)
+    i = np.where(y_train==20)
+    print(i[0][0])
+    dp.imshow(i[0][0],x_train,y_train)

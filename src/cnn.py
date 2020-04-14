@@ -9,7 +9,7 @@ import cv2 as cv
 class CNN:
     def __init__(self,load=False):
         self.learning_rate = 0.005
-        self.epochs = 150
+        self.epochs = 5
         self.weights_path = "trained_model/model1.ckpt"
 
         self.x_test = self.y_test = None
@@ -17,15 +17,20 @@ class CNN:
         self.model = self.load_model() if load else self.get_model()
 
     def load_data(self):
+        # get the data from the pre process file
         dp = DataPreprocess()
         self.x_train,self.y_train,self.x_test,self.y_test = dp.pre_process()
 
     def load_model(self):
+        # load in saved model
         model = self.get_model()
         model.load_weights(self.weights_path)
         return model
 
     def get_model(self):
+        # create the sequential model input layer takes the image
+        # 13 hidden layers
+        # output layer
         model = keras.Sequential([
             keras.layers.Conv2D(56, (3, 3), input_shape=(28, 28, 1), activation='relu'),
             keras.layers.Conv2D(28, (3, 3), activation='relu'),
@@ -53,14 +58,18 @@ class CNN:
         return model
 
     def train(self):
+        # save model
         cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=self.weights_path,save_weights_only=True,verbose=1)
+        # train model on data
         self.model.fit(self.x_train, self.y_train, epochs=self.epochs, callbacks=[cp_callback])
 
     def test(self):
+        # get testing accuracy
         accuracy = self.model.evaluate(self.x_test, self.y_test, verbose=False)[1]
         print("accuracy: " + str(accuracy * 100) + "%")
 
     def predict(self, letter_img):
+        # predicting a single image
         return np.argmax(self.model.predict(letter_img))
 
 
@@ -86,4 +95,4 @@ if __name__ == "__main__":
     #print("DONE TRAINING")
     cnn.test()
 
-    #show_image(cnn, 20000)
+    show_image(cnn, 20000)
