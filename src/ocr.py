@@ -11,13 +11,12 @@ if __name__ == "__main__":
     cnn = CNN(load=True)
     cnn.load_data()
 
-    file = '../inputs/hello.jpg'
+    file = '../inputs/paragraph.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
     preproc.resize(540,960)
     preproc.rotate()
-    # preproc.show()
     img = preproc.get_image()
 
     # show image
@@ -50,8 +49,8 @@ if __name__ == "__main__":
                 cv.imshow("char", char)
                 cv.waitKey()
                 char = char_seg.clean_char(char)
-                letter = label_to_letter[cnn.predict(char)]
-                print(letter,end=" ")
+                #letter = label_to_letter[cnn.predict(char)]
+                #print(letter,end=" ")
 
             print(" ",end=" ")
         print()
