@@ -2,7 +2,8 @@ from image_preprocess import PreProcess
 from line_segmentation import LineSegmentation
 from word_segmentation import WordSegmentation
 from char_segmentation import CharSegmentation
-from model.cnn import CNN
+from cnn import CNN
+from data import label_to_letter
 import cv2 as cv
 
 if __name__ == "__main__":
@@ -10,7 +11,7 @@ if __name__ == "__main__":
     cnn = CNN(load=True)
     cnn.load_data()
 
-    file = '../inputs/input.jpg'
+    file = '../inputs/hello.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
@@ -20,8 +21,8 @@ if __name__ == "__main__":
     img = preproc.get_image()
 
     # show image
-    # cv.imshow("image",img)
-    # cv.waitKey()
+    cv.imshow("image",img)
+    cv.waitKey()
 
     # segment by line
     line_seg = LineSegmentation(img)
@@ -30,8 +31,8 @@ if __name__ == "__main__":
 
     # print line segments
     for line in lines:
-        # cv.imshow("line", line)
-        # cv.waitKey()
+        cv.imshow("line", line)
+        cv.waitKey()
 
         # segment by word
         word_seg = WordSegmentation(line)
@@ -39,18 +40,21 @@ if __name__ == "__main__":
         words = word_seg.segment()
 
         for word in words:
-            # cv.imshow("word", word)
-            # cv.waitKey()
+            cv.imshow("word", word)
+            cv.waitKey()
 
             char_seg = CharSegmentation(word)
             char_seg.prep()
             chars = char_seg.segment()
             for char in chars:
-                # cv.imshow("char", char)
-                # cv.waitKey()
-                pass
-                #char = char.reshape(1, 28, 28, 1)
-                #letter = cnn.predict(char)
+                cv.imshow("char", char)
+                cv.waitKey()
+                char = char_seg.clean_char(char)
+                letter = label_to_letter[cnn.predict(char)]
+                print(letter,end=" ")
+
+            print(" ",end=" ")
+        print()
 
 
 

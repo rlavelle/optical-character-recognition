@@ -28,7 +28,7 @@ class WordSegmentation:
 
     def segment(self):
         # dilate the image horizontally to the contours are connected
-        kernel = np.ones((100, 16), np.uint8)
+        kernel = np.ones((100, 20), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         # debug
@@ -47,9 +47,9 @@ class WordSegmentation:
                 continue
             # Get bounding box
             x, y, w, h = cv.boundingRect(c)
-            # Getting line image
+            # Getting word image
             self.words.append(self.line[y:y + h, x:x + w])
-            #cv.rectangle(self.line, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            # cv.rectangle(self.line, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         # debug
         # cv.imshow("boxed", self.line)

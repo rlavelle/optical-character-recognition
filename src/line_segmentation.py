@@ -49,7 +49,7 @@ class LineSegmentation:
             x, y, w, h = cv.boundingRect(c)
             # Getting line image
             self.lines.append(self.img[y:y + h, x:x + w])
-            #cv.rectangle(self.img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            # cv.rectangle(self.img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         # debug
         # cv.imshow("boxed", self.img)
