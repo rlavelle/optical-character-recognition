@@ -1,0 +1,4 @@
+1) lines do not overlap (text stays between the lines on written paper)
+2) Words are evenely spaced and dont touch eachother
+3) characters in words do not touch / connect
+4) the spacing between characters in words is similar, and the spacing between words in a line is greater than the spacing of characters within words
