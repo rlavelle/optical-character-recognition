@@ -29,18 +29,27 @@ class CNN:
 
     def get_model(self):
         # create the sequential model input layer takes the image
-        # 13 hidden layers
+        # 3 convolution layers with max poolings and dropouts
+        # 4 dense layers
         # output layer
         model = keras.Sequential([
-            keras.layers.Conv2D(60, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+            keras.layers.Conv2D(28, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+
+            keras.layers.Conv2D(100, (3, 3), activation='relu'),
+            keras.layers.MaxPool2D(pool_size=(2, 2)),
+            keras.layers.Dropout(0.25),
+
             keras.layers.Conv2D(200, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
+
             keras.layers.Conv2D(400, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
+
             keras.layers.Flatten(input_shape=(28,28)),
             keras.layers.Dense(784, activation='relu'),
+            keras.layers.Dense(392, activation='relu'),
             keras.layers.Dense(196, activation='relu'),
             keras.layers.Dense(98, activation='relu'),
             keras.layers.Dense(26, activation='softmax')
@@ -86,10 +95,10 @@ if __name__ == "__main__":
         letter_pred = cnn.predict(letter_img_pred)
         imshow(letter_img_disp, letter_pred + 1)
 
-    cnn = CNN(load=True)
+    cnn = CNN(load=False)
     cnn.load_data()
-    #nn.train()
-    #print("DONE TRAINING")
+    cnn.train()
+    print("DONE TRAINING")
     cnn.test()
 
     #show_image(cnn, 20000)

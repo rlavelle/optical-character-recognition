@@ -31,7 +31,8 @@ class WordSegmentation:
             cv.waitKey()
 
     def segment(self):
-        # dilate the image horizontally to the contours are connected
+        # dilate each component of the image vertically and slightly horizontally
+        # so that each word becomes a single connected component for bounding boxes
         kernel = np.ones((100, 20), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 

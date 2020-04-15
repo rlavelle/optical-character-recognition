@@ -30,7 +30,8 @@ class LineSegmentation:
             cv.waitKey()
 
     def segment(self):
-        # dilate the image horizontally to the contours are connected
+        # dilate each component of the image horizontally so that each
+        # line becomes a single connected component for bounding boxes
         kernel = np.ones((1, 100), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 

@@ -3,6 +3,7 @@ import numpy as np
 from line_segmentation import LineSegmentation
 from word_segmentation import WordSegmentation
 from image_preprocess import PreProcess
+from cnn import CNN
 from data import label_to_letter
 
 debug = False
@@ -33,7 +34,8 @@ class CharSegmentation:
             cv.waitKey()
 
     def segment(self):
-        # dilate the image horizontally to the contours are connected
+        # dilate each component of the image vertically so that each character
+        # becomes a single connected component for bounding boxes
         kernel = np.ones((15, 2), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
