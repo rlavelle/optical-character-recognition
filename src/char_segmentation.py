@@ -74,7 +74,6 @@ class CharSegmentation:
 
         # rotate image so its same rotation as training set
         char = cv.flip(cv.rotate(char, cv.ROTATE_90_CLOCKWISE), 1)
-        char = cv.flip(char, 0)
 
         # normalize the image
         char = (char - np.mean(char)) / (np.std(char))
@@ -115,10 +114,11 @@ if __name__ == "__main__":
     char_seg.prep()
     chars = char_seg.segment()
 
+    char = chars[1]
     # for char in chars:
-    #     char = char_seg.clean_char(char)
-    #     cv.imshow("char", char.reshape(28,28))
-    #     cv.waitKey()
+    char = char_seg.clean_char(char)
+    cv.imshow("char", char.reshape(28,28))
+    cv.waitKey()
 
     # from cnn import CNN
     # cnn = CNN(load=True)
