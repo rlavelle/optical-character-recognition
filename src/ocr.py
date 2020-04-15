@@ -6,54 +6,73 @@ from cnn import CNN
 from data import label_to_letter
 import cv2 as cv
 
-if __name__ == "__main__":
-    # make and load the model
-    cnn = CNN(load=True)
-    cnn.load_data()
+show = False
 
-    file = '../inputs/hello.jpg'
 
-    # pre process the image
-    preproc = PreProcess(file)
-    preproc.resize(540,960)
-    preproc.rotate()
-    img = preproc.get_image()
+class OCR:
+    def __init__(self, img=None, file=None):
+        if img: self.p = PreProcess(img=img)
+        if file: self.p = PreProcess(file=file)
 
-    # show image
-    cv.imshow("image",img)
-    cv.waitKey()
+        # resize and rotate the image
+        self.p.resize(600,1000)
+        self.p.rotate()
+        self.img = self.p.get_image()
 
-    # segment by line
-    line_seg = LineSegmentation(img)
-    line_seg.prep()
-    lines = line_seg.segment()
+        # create instance of neural network
+        self.cnn = CNN(load=True)
+        self.cnn.load_data()
 
-    # print line segments
-    for line in lines:
-        cv.imshow("line", line)
-        cv.waitKey()
+    def text(self):
+        output = ""
 
-        # segment by word
-        word_seg = WordSegmentation(line)
-        word_seg.prep()
-        words = word_seg.segment()
+        # segment image by its line
+        line_seg = LineSegmentation(self.img)
+        line_seg.prep()
+        lines = line_seg.segment()
 
-        for word in words:
-            cv.imshow("word", word)
-            cv.waitKey()
-
-            char_seg = CharSegmentation(word)
-            char_seg.prep()
-            chars = char_seg.segment()
-            for char in chars:
-                cv.imshow("char", char)
+        for line in lines:
+            if show:
+                cv.imshow("line", line)
                 cv.waitKey()
-                char = char_seg.clean_char(char)
-                letter = label_to_letter[cnn.predict(char)+1]
-                print(letter,end="")
 
-            print(" ",end=" ")
-        print()
+            # segment each line by its word
+            word_seg = WordSegmentation(line)
+            word_seg.prep()
+            words = word_seg.segment()
+
+            for word in words:
+                if show:
+                    cv.imshow("word", word)
+                    cv.waitKey()
+
+                # segment each word by its character
+                char_seg = CharSegmentation(word)
+                char_seg.prep()
+                chars = char_seg.segment()
+
+                for char in chars:
+                    if show:
+                        cv.imshow("char", char)
+                        cv.waitKey()
+
+                    # clean character and get its classification from the network
+                    char = char_seg.clean_char(char)
+                    letter = label_to_letter[self.cnn.predict(char) + 1]
+
+                    # update the output text
+                    output += letter
+                output += " "
+            output += "\n"
+
+        return output
+
+
+if __name__ == "__main__":
+    file = '../inputs/hello.jpg'
+    ocr = OCR(file=file)
+    text = ocr.text()
+    print(text)
 
 
 

@@ -2,8 +2,11 @@ import cv2 as cv
 
 
 class PreProcess:
-    def __init__(self,file):
-        self.img = cv.imread(file)
+    def __init__(self,file=None,img=None):
+        if img:
+            self.img = img
+        if file:
+            self.img = cv.imread(file)
 
     def resize(self,w,h):
         self.img = cv.resize(self.img, (w, h))
