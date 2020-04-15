@@ -108,17 +108,17 @@ if __name__ == "__main__":
     word_seg = WordSegmentation(line)
     word_seg.prep()
     words = word_seg.segment()
-    word = words[0]
+    word = words[1]
 
     char_seg = CharSegmentation(word)
     char_seg.prep()
     chars = char_seg.segment()
 
-    char = chars[1]
-    # for char in chars:
-    char = char_seg.clean_char(char)
-    cv.imshow("char", char.reshape(28,28))
-    cv.waitKey()
+    # char = chars[1]
+    for char in chars:
+        char = char_seg.clean_char(char)
+        cv.imshow("char", char.reshape(28,28))
+        cv.waitKey()
 
     # from cnn import CNN
     # cnn = CNN(load=True)

@@ -20,8 +20,8 @@ if __name__ == "__main__":
     img = preproc.get_image()
 
     # show image
-    # cv.imshow("image",img)
-    # cv.waitKey()
+    cv.imshow("image",img)
+    cv.waitKey()
 
     # segment by line
     line_seg = LineSegmentation(img)
@@ -30,8 +30,8 @@ if __name__ == "__main__":
 
     # print line segments
     for line in lines:
-        # cv.imshow("line", line)
-        # cv.waitKey()
+        cv.imshow("line", line)
+        cv.waitKey()
 
         # segment by word
         word_seg = WordSegmentation(line)
@@ -39,18 +39,18 @@ if __name__ == "__main__":
         words = word_seg.segment()
 
         for word in words:
-            # cv.imshow("word", word)
-            # cv.waitKey()
+            cv.imshow("word", word)
+            cv.waitKey()
 
             char_seg = CharSegmentation(word)
             char_seg.prep()
             chars = char_seg.segment()
             for char in chars:
-                # cv.imshow("char", char)
-                # cv.waitKey()
+                cv.imshow("char", char)
+                cv.waitKey()
                 char = char_seg.clean_char(char)
                 letter = label_to_letter[cnn.predict(char)+1]
-                print(letter,end=" ")
+                print(letter,end="")
 
             print(" ",end=" ")
         print()
