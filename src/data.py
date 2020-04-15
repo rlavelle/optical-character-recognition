@@ -86,12 +86,12 @@ class DataPreprocess:
         return self.x_train,self.y_train,self.x_test,self.y_test
 
     def get_data(self):
-        return self.x_train,self.y_train,self.x_test,self.y_test
+        return np.uint8((self.x_train > 0) * 255),self.y_train,self.x_test,self.y_test
 
 
 if __name__ == "__main__":
     dp = DataPreprocess()
     x_train,y_train,x_test,y_test = dp.get_data()
-    i = np.where(y_train==20)
+    i = np.where(y_train==5)
     print(i[0][0])
     dp.imshow(i[0][0],x_train,y_train)

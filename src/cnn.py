@@ -93,6 +93,6 @@ if __name__ == "__main__":
     cnn.load_data()
     #cnn.train()
     #print("DONE TRAINING")
-    cnn.test()
+    #cnn.test()
 
     show_image(cnn, 20000)
