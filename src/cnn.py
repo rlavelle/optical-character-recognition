@@ -9,7 +9,7 @@ import cv2 as cv
 class CNN:
     def __init__(self,load=False):
         self.learning_rate = 0.005
-        self.epochs = 5
+        self.epochs = 10
         self.weights_path = "trained_model/model1.ckpt"
 
         self.x_test = self.y_test = None
@@ -32,20 +32,17 @@ class CNN:
         # 13 hidden layers
         # output layer
         model = keras.Sequential([
-            keras.layers.Conv2D(56, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-            keras.layers.Conv2D(28, (3, 3), activation='relu'),
+            keras.layers.Conv2D(60, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+            keras.layers.Conv2D(200, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
-            keras.layers.Conv2D(14, (3, 3), activation='relu'),
+            keras.layers.Dropout(0.25),
+            keras.layers.Conv2D(400, (3, 3), activation='relu'),
             keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
             keras.layers.Flatten(input_shape=(28,28)),
             keras.layers.Dense(784, activation='relu'),
-            keras.layers.Dense(392, activation='relu'),
-            keras.layers.Dense(392, activation='relu'),
-            keras.layers.Dense(196, activation='relu'),
             keras.layers.Dense(196, activation='relu'),
             keras.layers.Dense(98, activation='relu'),
-            keras.layers.Dense(49, activation='relu'),
             keras.layers.Dense(26, activation='softmax')
         ])
 
@@ -89,10 +86,10 @@ if __name__ == "__main__":
         letter_pred = cnn.predict(letter_img_pred)
         imshow(letter_img_disp, letter_pred + 1)
 
-    cnn = CNN(load=True)
+    cnn = CNN(load=False)
     cnn.load_data()
-    #cnn.train()
-    #print("DONE TRAINING")
-    #cnn.test()
+    cnn.train()
+    print("DONE TRAINING")
+    cnn.test()
 
-    show_image(cnn, 20000)
+    #show_image(cnn, 20000)
