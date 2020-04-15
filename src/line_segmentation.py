@@ -42,7 +42,7 @@ class LineSegmentation:
         components, _ = cv.findContours(dilate, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
         # sort contours
-        components = sorted(components, key=lambda c: cv.boundingRect(c)[0])
+        components = sorted(components, key=lambda c: cv.boundingRect(c)[1])
 
         for c in components:
             # skip small boxes
@@ -62,7 +62,7 @@ class LineSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/hello.jpg'
+    file = '../inputs/paragraph.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
