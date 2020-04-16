@@ -34,6 +34,7 @@ class WordSegmentation:
         # dilate each component of the image vertically and slightly horizontally
         # so that each word becomes a single connected component for bounding boxes
         kernel = np.ones((100, 20), np.uint8)
+        #kernel = np.ones((100, 10), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
@@ -54,7 +55,7 @@ class WordSegmentation:
             x, y, w, h = cv.boundingRect(c)
             # Getting word image
             self.words.append(self.line[y:y + h, x:x + w])
-            #cv.rectangle(self.line, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            if debug: cv.rectangle(self.line, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         if debug:
             cv.imshow("boxed", self.line)
@@ -64,7 +65,7 @@ class WordSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/hello.jpg'
+    file = '../inputs/hellotext.png'
 
     # pre process the image
     preproc = PreProcess(file)
@@ -84,7 +85,6 @@ if __name__ == "__main__":
     word_seg = WordSegmentation(line)
     word_seg.prep()
     words = word_seg.segment()
-    word = words[0]
-
-    cv.imshow("word",word)
-    cv.waitKey()
+    for word in words:
+        cv.imshow("word",word)
+        cv.waitKey()

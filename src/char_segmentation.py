@@ -5,6 +5,7 @@ from word_segmentation import WordSegmentation
 from image_preprocess import PreProcess
 from cnn import CNN
 from data import label_to_letter
+import math
 
 debug = False
 
@@ -51,7 +52,7 @@ class CharSegmentation:
 
         for c in components:
             # skip small boxes
-            if cv.contourArea(c) < 150:
+            if cv.contourArea(c) < 130:
                 continue
             # Get bounding box
             x, y, w, h = cv.boundingRect(c)
@@ -66,8 +67,7 @@ class CharSegmentation:
         return self.chars
 
     def clean_char(self, char):
-        # resize and gray scale
-        char = cv.resize(char, (28,28))
+        # gray scale
         char = cv.cvtColor(char, cv.COLOR_RGB2GRAY)
 
         # blurr image and threshold
@@ -75,6 +75,16 @@ class CharSegmentation:
         char = cv.filter2D(char, -1, kernel)
         char = np.uint8((char>char.mean())*255)
         char = 255 - char
+
+        # resize char
+
+        # if its a skinny rectangle we zero pad
+        if char.shape[0]/char.shape[1] > 3:
+            char = cv.resize(char, (char.shape[1], 28))
+            char = cv.copyMakeBorder(char, 0, 0, math.ceil(14-char.shape[1]/2), math.ceil(14-char.shape[1]/2), cv.BORDER_CONSTANT,0)
+            char = cv.resize(char, (28,28))
+        else:
+            char = cv.resize(char, (28,28))
 
         # rotate image so its same rotation as training set
         char = cv.flip(cv.rotate(char, cv.ROTATE_90_CLOCKWISE), 1)
@@ -88,7 +98,7 @@ class CharSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/hello.jpg'
+    file = '../inputs/hellotext.png'
 
     # pre process the image
     preproc = PreProcess(file)
@@ -114,13 +124,13 @@ if __name__ == "__main__":
     char_seg.prep()
     chars = char_seg.segment()
 
-    char = chars[0]
-    char = char_seg.clean_char(char)
-    cv.imshow("char", char.reshape(28,28))
-    cv.waitKey()
+    for char in chars:
+        char = char_seg.clean_char(char)
+        cv.imshow("char", char.reshape(28,28))
+        cv.waitKey()
 
-    cnn = CNN(load=True)
-    cnn.load_data()
-    letter = label_to_letter[cnn.predict(char)+1]
-    print(letter)
+    # cnn = CNN(load=True)
+    # cnn.load_data()
+    # letter = label_to_letter[cnn.predict(char)+1]
+    # print(letter)
 

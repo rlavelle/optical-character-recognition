@@ -9,7 +9,7 @@ import cv2 as cv
 class CNN:
     def __init__(self,load=False):
         self.learning_rate = 0.005
-        self.epochs = 100
+        self.epochs = 1
         self.weights_path = "trained_model/model1.ckpt"
 
         self.x_test = self.y_test = None
@@ -28,25 +28,20 @@ class CNN:
         return model
 
     def get_model(self):
-        # create the sequential model input layer takes the image
-        # 3 convolution layers with max poolings and dropouts
-        # 4 dense layers
-        # output layer
+        # create the sequential model
         model = keras.Sequential([
-            keras.layers.Conv2D(28, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-
+            keras.layers.Conv2D(50, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+            keras.layers.Dropout(0.25),
             keras.layers.Conv2D(100, (3, 3), activation='relu'),
-            keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
-
+            keras.layers.Conv2D(150, (3, 3), activation='relu'),
+            keras.layers.Dropout(0.25),
             keras.layers.Conv2D(200, (3, 3), activation='relu'),
-            keras.layers.MaxPool2D(pool_size=(2, 2)),
             keras.layers.Dropout(0.25),
-
-            keras.layers.Conv2D(400, (3, 3), activation='relu'),
-            keras.layers.MaxPool2D(pool_size=(2, 2)),
+            keras.layers.Conv2D(350, (3, 3), activation='relu'),
             keras.layers.Dropout(0.25),
-
+            keras.layers.Conv2D(500, (3, 3), activation='relu'),
+            keras.layers.Dropout(0.25),
             keras.layers.Flatten(input_shape=(28,28)),
             keras.layers.Dense(784, activation='relu'),
             keras.layers.Dense(392, activation='relu'),

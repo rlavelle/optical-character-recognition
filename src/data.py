@@ -93,6 +93,7 @@ class DataPreprocess:
 if __name__ == "__main__":
     dp = DataPreprocess()
     x_train,y_train,x_test,y_test = dp.get_data()
-    i = np.where(y_train==4)
+    i = np.where(y_train==12)
     print(i[0][25])
-    dp.imshow(i[0][25],x_train,y_train)
+    for j in range(0,50):
+        dp.imshow(i[0][j],x_train,y_train)
