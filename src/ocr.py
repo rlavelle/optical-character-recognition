@@ -69,7 +69,7 @@ class OCR:
 
 
 if __name__ == "__main__":
-    file = '../inputs/rowans.jpg'
+    file = '../inputs/rowan.jpg'
     ocr = OCR(file=file)
     text = ocr.text()
     print(text)
