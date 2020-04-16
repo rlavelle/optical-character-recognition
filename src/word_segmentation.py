@@ -54,7 +54,7 @@ class WordSegmentation:
             x, y, w, h = cv.boundingRect(c)
             # Getting word image
             self.words.append(self.line[y:y + h, x:x + w])
-            if debug: cv.rectangle(self.line, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            #cv.rectangle(self.line, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         if debug:
             cv.imshow("boxed", self.line)

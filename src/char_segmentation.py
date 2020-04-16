@@ -50,11 +50,14 @@ class CharSegmentation:
         components = sorted(components, key=lambda c: cv.boundingRect(c)[0])
 
         for c in components:
+            # skip small boxes
+            if cv.contourArea(c) < 150:
+                continue
             # Get bounding box
             x, y, w, h = cv.boundingRect(c)
             # Getting char image
             self.chars.append(self.word[y:y + h, x:x + w])
-            if debug: cv.rectangle(self.word, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cv.rectangle(self.word, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         if debug:
             cv.imshow("boxed", self.word)

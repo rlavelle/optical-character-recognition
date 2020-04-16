@@ -69,10 +69,12 @@ class OCR:
 
 
 if __name__ == "__main__":
-    file = '../inputs/hello.jpg'
+    file = '../inputs/hello2.jpg'
     ocr = OCR(file=file)
     text = ocr.text()
     print(text)
+    cv.imshow("lksjf",ocr.img)
+    cv.waitKey()
 
 
 
