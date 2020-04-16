@@ -9,7 +9,7 @@ import cv2 as cv
 class CNN:
     def __init__(self,load=False):
         self.learning_rate = 0.005
-        self.epochs = 1
+        self.epochs = 100
         self.weights_path = "trained_model/model1.ckpt"
 
         self.x_test = self.y_test = None
