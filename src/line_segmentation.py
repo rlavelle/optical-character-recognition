@@ -14,7 +14,7 @@ class LineSegmentation:
     def prep(self):
         # grey scale the image
         gray = cv.cvtColor(self.img, cv.COLOR_RGB2GRAY)
-        kernel = np.ones((2, 2), np.float32) / 4
+        kernel = np.ones((3, 3), np.float32) / 4
         gray = cv.filter2D(gray, -1, kernel)
 
         if debug:
@@ -22,7 +22,7 @@ class LineSegmentation:
             cv.waitKey()
 
         # binarize the image
-        self.bw = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 25)
+        self.bw = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 15)
         self.bw = 255 - self.bw
 
         if debug:

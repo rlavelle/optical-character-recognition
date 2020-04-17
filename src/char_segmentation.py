@@ -19,7 +19,7 @@ class CharSegmentation:
     def prep(self):
         # grey scale and blurr the image
         gray = cv.cvtColor(self.word, cv.COLOR_RGB2GRAY)
-        kernel = np.ones((2, 2), np.float32) / 4
+        kernel = np.ones((3, 3), np.float32) / 4
         gray = cv.filter2D(gray, -1, kernel)
 
         if debug:
@@ -52,7 +52,7 @@ class CharSegmentation:
 
         for c in components:
             # skip small boxes
-            if cv.contourArea(c) < 130:
+            if cv.contourArea(c) < 100:
                 continue
             # Get bounding box
             x, y, w, h = cv.boundingRect(c)
@@ -80,10 +80,16 @@ class CharSegmentation:
 
         # if its a skinny rectangle we zero pad
         if char.shape[0]/char.shape[1] > 3:
+            # add a padding around the char so it doesnt touch the edges
+            char = cv.copyMakeBorder(char, 5, 5, 5, 5, cv.BORDER_CONSTANT,0)
+            # reshape to keep same width but cut height to 28
             char = cv.resize(char, (char.shape[1], 28))
+            # reshape to have the width be 28 by evenly padding both sides
             char = cv.copyMakeBorder(char, 0, 0, math.ceil(14-char.shape[1]/2), math.ceil(14-char.shape[1]/2), cv.BORDER_CONSTANT,0)
             char = cv.resize(char, (28,28))
         else:
+            # add a padding around the char so it doesnt touch edges
+            char = cv.copyMakeBorder(char, 1, 1, 1, 1, cv.BORDER_CONSTANT,0)
             char = cv.resize(char, (28,28))
 
         # rotate image so its same rotation as training set
@@ -98,7 +104,7 @@ class CharSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/hellotext.png'
+    file = '../inputs/rowan.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
@@ -118,19 +124,19 @@ if __name__ == "__main__":
     word_seg = WordSegmentation(line)
     word_seg.prep()
     words = word_seg.segment()
-    word = words[1]
+    word = words[0]
 
     char_seg = CharSegmentation(word)
     char_seg.prep()
     chars = char_seg.segment()
 
-    for char in chars:
-        char = char_seg.clean_char(char)
-        cv.imshow("char", char.reshape(28,28))
-        cv.waitKey()
+    #cnn = CNN(load=True)
+    #cnn.load_data()
 
-    # cnn = CNN(load=True)
-    # cnn.load_data()
-    # letter = label_to_letter[cnn.predict(char)+1]
-    # print(letter)
+    # for char in chars:
+    #      char = char_seg.clean_char(char)
+    #      cv.imshow('char', char.reshape(28,28))
+    #      cv.waitKey()
+
+
 
