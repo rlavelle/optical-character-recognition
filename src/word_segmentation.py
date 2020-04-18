@@ -65,7 +65,7 @@ class WordSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/hello.jpg'
+    file = '../inputs/intro.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
