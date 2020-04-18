@@ -15,7 +15,7 @@ class OCR:
         if file: self.p = PreProcess(file=file)
 
         # resize and rotate the image
-        self.p.resize(600,1000)
+        self.p.resize(1000,1400)
         self.p.rotate()
         self.img = self.p.get_image()
 
@@ -69,11 +69,11 @@ class OCR:
 
 
 if __name__ == "__main__":
-    file = '../inputs/rowan_lavelle.jpg'
+    file = '../inputs/upper-alphabet.jpg'
     ocr = OCR(file=file)
     text = ocr.text()
     print(text)
-    cv.imshow("lksjf",ocr.img)
+    cv.imshow("output",cv.resize(ocr.img,(600,400)))
     cv.waitKey()
 
 

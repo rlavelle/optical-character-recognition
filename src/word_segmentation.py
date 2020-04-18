@@ -33,7 +33,7 @@ class WordSegmentation:
     def segment(self):
         # dilate each component of the image vertically and slightly horizontally
         # so that each word becomes a single connected component for bounding boxes
-        kernel = np.ones((100, 16), np.uint8)
+        kernel = np.ones((100, 25), np.uint8)
         #kernel = np.ones((100, 5), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     # pre process the image
     preproc = PreProcess(file)
-    preproc.resize(600, 1000)
+    preproc.resize(1000, 1400)
     preproc.rotate()
     # preproc.show()
     img = preproc.get_image()

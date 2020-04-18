@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     # pre process the image
     preproc = PreProcess(file)
-    preproc.resize(600, 1000)
+    preproc.resize(1000, 1400)
     preproc.rotate()
     # preproc.show()
     img = preproc.get_image()

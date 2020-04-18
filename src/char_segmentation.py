@@ -76,9 +76,7 @@ class CharSegmentation:
         char = np.uint8((char>char.mean())*255)
         char = 255 - char
 
-        # resize char
-
-        # if its a skinny rectangle we zero pad
+        # if its a skinny rectangle
         if char.shape[0]/char.shape[1] > 3:
             # add a padding around the char so it doesnt touch the edges
             char = cv.copyMakeBorder(char, 3, 3, 3, 3, cv.BORDER_CONSTANT,0)
@@ -104,11 +102,11 @@ class CharSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/hello.jpg'
+    file = '../inputs/hello_world.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
-    preproc.resize(600, 1000)
+    preproc.resize(1000, 1400)
     preproc.rotate()
     # preproc.show()
     img = preproc.get_image()
