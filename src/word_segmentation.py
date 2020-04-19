@@ -44,7 +44,7 @@ class WordSegmentation:
         # find components
         components, _ = cv.findContours(dilate, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
-        # sort contours
+        # sort components y axis top to bottom
         components = sorted(components, key=lambda c: cv.boundingRect(c)[0])
 
         for c in components:

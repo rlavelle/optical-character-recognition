@@ -5,6 +5,7 @@ from char_segmentation import CharSegmentation
 from cnn import CNN
 from data import label_to_letter
 import cv2 as cv
+import numpy as np
 
 show = False
 
