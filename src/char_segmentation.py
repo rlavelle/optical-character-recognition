@@ -46,7 +46,7 @@ class CharSegmentation:
 
         # find components
         components, _ = cv.findContours(dilate, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-        print(a)
+
         # sort components y axis top to bottom
         components = sorted(components, key=lambda c: cv.boundingRect(c)[0])
 
