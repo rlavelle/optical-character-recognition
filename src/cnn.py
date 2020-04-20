@@ -10,7 +10,7 @@ class CNN:
     def __init__(self,load=False):
         self.learning_rate = 0.005
         self.epochs = 100
-        self.weights_path = "trained_model_backup/model1.ckpt"
+        self.weights_path = "trained_model/model1.ckpt"
 
         self.x_test = self.y_test = None
         self.x_train = self.y_train = None
@@ -28,26 +28,6 @@ class CNN:
         return model
 
     def get_model(self):
-        # create the sequential model
-        # model = keras.Sequential([
-        #     keras.layers.Conv2D(50, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-        #     keras.layers.Conv2D(100, (3, 3), activation='relu'),
-        #     keras.layers.MaxPool2D((2,2)),
-        #     keras.layers.Dropout(0.25),
-        #     keras.layers.Conv2D(250, (3, 3), activation='relu'),
-        #     keras.layers.MaxPool2D((2, 2)),
-        #     keras.layers.Dropout(0.25),
-        #     keras.layers.Conv2D(400, (3, 3), activation='relu'),
-        #     keras.layers.Conv2D(512, (3, 3), activation='relu'),
-        #     keras.layers.Dropout(0.25),
-        #     keras.layers.Flatten(input_shape=(28,28)),
-        #     keras.layers.Dense(784, activation='relu'),
-        #     keras.layers.Dense(392, activation='relu'),
-        #     keras.layers.Dense(196, activation='relu'),
-        #     keras.layers.Dense(98, activation='relu'),
-        #     keras.layers.Dense(26, activation='softmax')
-        # ])
-
         model = keras.Sequential([
             keras.layers.Conv2D(50, (3, 3), input_shape=(28, 28, 1), activation='relu'),
             keras.layers.Conv2D(100, (3, 3), activation='relu'),
@@ -66,25 +46,6 @@ class CNN:
             keras.layers.Dense(98, activation='relu'),
             keras.layers.Dense(26, activation='softmax')
         ])
-
-        # model = keras.Sequential([
-        #     keras.layers.Conv2D(64, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-        #     keras.layers.Conv2D(128, (3, 3), activation='relu'),
-        #     keras.layers.MaxPool2D((2, 2)),
-        #     keras.layers.Dropout(0.25),
-        #     keras.layers.Conv2D(256, (3, 3), activation='relu'),
-        #     keras.layers.MaxPool2D((2, 2)),
-        #     keras.layers.Dropout(0.25),
-        #     keras.layers.Conv2D(512, (3, 3), activation='relu'),
-        #     keras.layers.MaxPool2D((2, 2)),
-        #     keras.layers.Dropout(0.25),
-        #     keras.layers.Flatten(input_shape=(28, 28)),
-        #     keras.layers.Dense(784, activation='relu'),
-        #     keras.layers.Dense(392, activation='relu'),
-        #     keras.layers.Dense(196, activation='relu'),
-        #     keras.layers.Dense(98, activation='relu'),
-        #     keras.layers.Dense(26, activation='softmax')
-        # ])
 
         model.compile(
             loss=keras.losses.categorical_crossentropy,
