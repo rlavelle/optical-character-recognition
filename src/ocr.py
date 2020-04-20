@@ -52,6 +52,7 @@ class OCR:
                 char_seg.prep()
                 chars = char_seg.segment()
 
+                word = ""
                 for char in chars:
                     if show:
                         cv.imshow("char", char)
@@ -62,15 +63,16 @@ class OCR:
                     letter = label_to_letter[self.cnn.predict(char) + 1]
 
                     # update the output text
-                    output += letter
-                output += " "
+
+                    word += letter
+                output += word + " "
             output += "\n"
 
         return output
 
 
 if __name__ == "__main__":
-    file = '../inputs/sample.jpg'
+    file = '../inputs/paragraph.jpg'
     ocr = OCR(file=file)
     text = ocr.text()
     print(text)
