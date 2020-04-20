@@ -48,14 +48,14 @@ class CNN:
         # ])
 
         model = keras.Sequential([
-            keras.layers.Conv2D(32, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-            keras.layers.Conv2D(64, (3, 3), activation='relu'),
+            keras.layers.Conv2D(60, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+            keras.layers.Conv2D(120, (3, 3), activation='relu'),
             keras.layers.MaxPool2D((2, 2)),
             keras.layers.Dropout(0.25),
-            keras.layers.Conv2D(128, (3, 3), activation='relu'),
+            keras.layers.Conv2D(240, (3, 3), activation='relu'),
             keras.layers.MaxPool2D((2, 2)),
             keras.layers.Dropout(0.25),
-            keras.layers.Conv2D(256, (3, 3), activation='relu'),
+            keras.layers.Conv2D(420, (3, 3), activation='relu'),
             keras.layers.MaxPool2D((2, 2)),
             keras.layers.Dropout(0.25),
             keras.layers.Flatten(input_shape=(28, 28)),
