@@ -27,7 +27,7 @@ class CharSegmentation:
             cv.waitKey()
 
         # binarize the image
-        self.bw = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 14)
+        self.bw = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 10)
         self.bw = 255 - self.bw
 
         if debug:
@@ -102,7 +102,7 @@ class CharSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/hello_world.jpg'
+    file = '../inputs/demo.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
