@@ -27,7 +27,7 @@ class CharSegmentation:
             cv.waitKey()
 
         # binarize the image
-        self.bw = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 10)
+        self.bw = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 14)
         self.bw = 255 - self.bw
 
         if debug:
@@ -41,8 +41,8 @@ class CharSegmentation:
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
-            cv.imshow("dilate", dilate)
-            cv.waitKey()
+           cv.imshow("dilate", dilate)
+           cv.waitKey()
 
         # find components
         components, _ = cv.findContours(dilate, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     word_seg = WordSegmentation(line)
     word_seg.prep()
     words = word_seg.segment()
-    word = words[0]
+    word = words[2]
 
     char_seg = CharSegmentation(word)
     char_seg.prep()
