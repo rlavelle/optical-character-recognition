@@ -42,7 +42,7 @@ class LineSegmentation:
         # find components
         components, _ = cv.findContours(dilate, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
-        # sort components y axis top to bottom
+        # sort components
         components = sorted(components, key=lambda c: cv.boundingRect(c)[1])
 
         for c in components:

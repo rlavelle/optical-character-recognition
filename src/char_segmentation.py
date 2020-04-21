@@ -122,7 +122,7 @@ if __name__ == "__main__":
     word_seg = WordSegmentation(line)
     word_seg.prep()
     words = word_seg.segment()
-    word = words[2]
+    word = words[0]
 
     char_seg = CharSegmentation(word)
     char_seg.prep()
