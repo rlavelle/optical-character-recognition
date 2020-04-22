@@ -28,20 +28,33 @@ class CNN:
         return model
 
     def get_model(self):
+        # model = keras.Sequential([
+        #     keras.layers.Conv2D(50, (3, 3), input_shape=(28, 28, 1), activation='relu'),
+        #     keras.layers.Conv2D(100, (3, 3), activation='relu'),
+        #     keras.layers.MaxPool2D((2, 2)),
+        #     keras.layers.Dropout(0.25),
+        #     keras.layers.Conv2D(200, (3, 3), activation='relu'),
+        #     keras.layers.MaxPool2D((2, 2)),
+        #     keras.layers.Dropout(0.25),
+        #     keras.layers.Conv2D(400, (3, 3), activation='relu'),
+        #     keras.layers.MaxPool2D((2, 2)),
+        #     keras.layers.Dropout(0.25),
+        #     keras.layers.Flatten(input_shape=(28, 28)),
+        #     keras.layers.Dense(784, activation='relu'),
+        #     keras.layers.Dense(392, activation='relu'),
+        #     keras.layers.Dense(196, activation='relu'),
+        #     keras.layers.Dense(98, activation='relu'),
+        #     keras.layers.Dense(26, activation='softmax')
+        # ])
+
         model = keras.Sequential([
             keras.layers.Conv2D(50, (3, 3), input_shape=(28, 28, 1), activation='relu'),
-            keras.layers.Conv2D(100, (3, 3), activation='relu'),
             keras.layers.MaxPool2D((2, 2)),
             keras.layers.Dropout(0.25),
             keras.layers.Conv2D(200, (3, 3), activation='relu'),
             keras.layers.MaxPool2D((2, 2)),
             keras.layers.Dropout(0.25),
-            keras.layers.Conv2D(400, (3, 3), activation='relu'),
-            keras.layers.MaxPool2D((2, 2)),
-            keras.layers.Dropout(0.25),
             keras.layers.Flatten(input_shape=(28, 28)),
-            keras.layers.Dense(784, activation='relu'),
-            keras.layers.Dense(392, activation='relu'),
             keras.layers.Dense(196, activation='relu'),
             keras.layers.Dense(98, activation='relu'),
             keras.layers.Dense(26, activation='softmax')
@@ -87,10 +100,10 @@ if __name__ == "__main__":
         letter_pred = cnn.predict(letter_img_pred)
         imshow(letter_img_disp, letter_pred + 1)
 
-    cnn = CNN(load=True)
+    cnn = CNN(load=False)
     cnn.load_data()
-    #cnn.train()
-    #print("DONE TRAINING")
+    cnn.train()
+    print("DONE TRAINING")
     cnn.test()
 
     #show_image(cnn, 20000)
