@@ -3,6 +3,7 @@ import numpy as np
 from line_segmentation import LineSegmentation
 from word_segmentation import WordSegmentation
 from image_preprocess import PreProcess
+import matplotlib.pyplot as plt
 from cnn import CNN
 from data import label_to_letter
 import math
@@ -14,10 +15,11 @@ class CharSegmentation:
     def __init__(self, word):
         self.word = word
         self.chars = []
+        self.hist_chars = []
         self.bw = None
 
     def prep(self):
-        # grey scale and blurr the image
+        # grey scale and blur the image
         gray = cv.cvtColor(self.word, cv.COLOR_RGB2GRAY)
         kernel = np.ones((3, 3), np.float32) / 4
         gray = cv.filter2D(gray, -1, kernel)
@@ -43,6 +45,91 @@ class CharSegmentation:
         if debug:
            cv.imshow("dilate", dilate)
            cv.waitKey()
+
+        # lists to store x values and corresponding widths
+        xs = []
+        ws = []
+        # create a frequency histogram by column
+        hist = np.count_nonzero(dilate, axis=0).tolist()
+
+        if debug:
+            plt.plot(range(0, np.array(hist).shape[0]),np.array(hist))
+            plt.show()
+
+        # find the x values that start after lows
+        i = 0
+        while i < len(hist):
+            if hist[i] != 0:
+                xs.append(i)
+                j = i
+                w = 0
+                # find the width of the char
+                while j < len(hist) and hist[j] != 0:
+                    w += 1
+                    j += 1
+                ws.append(w)
+                i += w
+            i += 1
+
+        # loop through calculated x's and widths of chars and box them
+        for i in range(len(xs)):
+            self.hist_chars.append(self.word[0:dilate.shape[0], xs[i]:xs[i]+ws[i]])
+
+            if debug:
+                cv.imshow("hist chars", self.hist_chars[i])
+                cv.waitKey()
+
+        # re bound the char boxes to get correct y values
+        for char in self.hist_chars:
+            # grey scale and blur the char
+            gray = cv.cvtColor(char, cv.COLOR_RGB2GRAY)
+            kernel = np.ones((3, 3), np.float32) / 4
+            gray = cv.filter2D(gray, -1, kernel)
+
+            # re binarze image
+            bw_char = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2)
+            bw_char = 255 - bw_char
+
+            if debug:
+                cv.imshow("bw single char", bw_char)
+                cv.waitKey()
+
+            # dialte char
+            kernel = np.ones((5, 5), np.uint8)
+            dilate = cv.dilate(bw_char, kernel, iterations=1)
+
+            if debug:
+                cv.imshow("dilate single char", bw_char)
+                cv.waitKey()
+
+            # find components
+            components, _ = cv.findContours(dilate, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+            for c in components:
+                # skip small boxes
+                if cv.contourArea(c) < 100:
+                    continue
+                # Get bounding box
+                x, y, w, h = cv.boundingRect(c)
+                # Getting char image
+                self.chars.append(char[y:y + h, x:x + w])
+                cv.rectangle(char, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        if debug:
+            cv.imshow("boxed", self.word)
+            cv.waitKey()
+
+        return self.chars
+
+    def segment_old(self):
+        # dilate each component of the image vertically so that each character
+        # becomes a single connected component for bounding boxes
+        kernel = np.ones((15, 2), np.uint8)
+        dilate = cv.dilate(self.bw, kernel, iterations=1)
+
+        if debug:
+            cv.imshow("dilate", dilate)
+            cv.waitKey()
 
         # find components
         components, _ = cv.findContours(dilate, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -102,7 +189,7 @@ class CharSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/demo.jpg'
+    file = '../inputs/rowan_lavelle.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
