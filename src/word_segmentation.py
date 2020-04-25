@@ -23,7 +23,7 @@ class WordSegmentation:
             cv.waitKey()
 
         # binarize the image
-        self.bw = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 9)
+        self.bw = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 7)
         self.bw = 255 - self.bw
 
         if debug:
@@ -65,7 +65,7 @@ class WordSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/intro.jpg'
+    file = '../inputs/rowan.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
