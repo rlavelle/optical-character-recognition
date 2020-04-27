@@ -39,7 +39,7 @@ class CharSegmentation:
     def segment(self):
         # dilate each component of the image vertically so that each character
         # becomes a single connected component for bounding boxes
-        kernel = np.ones((15, 2), np.uint8)
+        kernel = np.ones((1, 1), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
@@ -157,11 +157,20 @@ class CharSegmentation:
         # gray scale
         char = cv.cvtColor(char, cv.COLOR_RGB2GRAY)
 
-        # blurr image and threshold
+        #blurr image and threshold
         kernel = np.ones((2, 2), np.float32) / 4
         char = cv.filter2D(char, -1, kernel)
-        char = np.uint8((char>char.mean())*255)
+
+        # char = np.uint8((char>char.mean())*255)
+        # char = 255 - char
+        # re binarze image
+
+        _ , char = cv.threshold(char, 0, 255, cv.THRESH_OTSU)
         char = 255 - char
+
+        if debug:
+            cv.imshow("pre clean char", char)
+            cv.waitKey()
 
         # if its a skinny rectangle
         if char.shape[0]/char.shape[1] > 3:
@@ -189,7 +198,7 @@ class CharSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/rowan_lavelle.jpg'
+    file = '../inputs/rowan.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
