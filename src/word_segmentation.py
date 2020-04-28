@@ -30,6 +30,13 @@ class WordSegmentation:
             cv.imshow("bw",self.bw)
             cv.waitKey()
 
+        kernel = np.ones((4,4))
+        self.bw = cv.morphologyEx(self.bw, cv.MORPH_OPEN, kernel)
+
+        if debug:
+            cv.imshow("de noise", self.bw)
+            cv.waitKey()
+
     def segment(self):
         # dilate each component of the image vertically and slightly horizontally
         # so that each word becomes a single connected component for bounding boxes
@@ -65,7 +72,7 @@ class WordSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/rowan.jpg'
+    file = '../inputs/ocr.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
@@ -79,7 +86,7 @@ if __name__ == "__main__":
     line_seg.prep()
     lines = line_seg.segment()
 
-    line = lines[0]
+    line = lines[1]
 
     # segment by word
     word_seg = WordSegmentation(line)
