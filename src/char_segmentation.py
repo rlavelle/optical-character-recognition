@@ -39,37 +39,86 @@ class CharSegmentation:
     def segment(self):
         # dilate each component of the image vertically so that each character
         # becomes a single connected component for bounding boxes
-        kernel = np.ones((1, 1), np.uint8)
+        kernel = np.ones((3, 2), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
            cv.imshow("dilate", dilate)
            cv.waitKey()
 
+        kernel = np.ones((4,4))
+        closing = cv.morphologyEx(dilate, cv.MORPH_CLOSE, kernel)
+
+        if debug:
+           cv.imshow("closing", closing)
+           cv.waitKey()
+
+        kernel = np.ones((5, 5), np.uint8)
+        erosion = cv.erode(closing, kernel, iterations=1)
+
+        if debug:
+            cv.imshow("erosion", erosion)
+            cv.waitKey()
+
         # lists to store x values and corresponding widths
         xs = []
         ws = []
         # create a frequency histogram by column
-        hist = np.count_nonzero(dilate, axis=0).tolist()
+        hist = np.count_nonzero(erosion, axis=0).tolist()
+        print(hist)
 
         if debug:
             plt.plot(range(0, np.array(hist).shape[0]),np.array(hist))
             plt.show()
 
-        # find the x values that start after lows
+        # find the first 0/1 freq -> x_start
+        # find the first > 1 freq -> x_end
+        # start = (x_start+x_end)/2
+        # find the next 0/1 freq -> x1_start
+        # find the next > 1 freq -> x1_end
+        # width = (x1_start+x1_end)/2-start
+        # use (x1_start+x1_end)/2 as start of next char
         i = 0
         while i < len(hist):
-            if hist[i] != 0:
-                xs.append(i)
+            # at end of a char
+            if hist[i] <= 1:
+
+                # loop until we find the start of the next char
                 j = i
-                w = 0
-                # find the width of the char
-                while j < len(hist) and hist[j] != 0:
-                    w += 1
+                while j < len(hist) and hist[j] <= 1:
                     j += 1
-                ws.append(w)
-                i += w
+
+                # j is now at the start of the next char
+                # i is now at the end of the prev char
+                x = math.floor((i+j)/2)
+
+                if len(xs) != 0:
+                    width = x - xs[-1]
+                    ws.append(width)
+                xs.append(x)
+                i = j+1
             i += 1
+
+
+            # if hist[i] > 1:
+            #     xs.append(i)
+            #     j = i
+            #     w = 0
+            #     # find the width of the char
+            #     while j < len(hist) and (hist[j] > 1):
+            #         w += 1
+            #         j += 1
+            #     ws.append(w)
+            #     i += w
+            # i += 1
+
+        # get rid of the extra last x value its just the end of the word
+        xs.pop()
+
+        # print(len(xs))
+        # print(len(ws))
+        # print(xs)
+        # print(ws)
 
         # loop through calculated x's and widths of chars and box them
         for i in range(len(xs)):
@@ -107,7 +156,7 @@ class CharSegmentation:
 
             for c in components:
                 # skip small boxes
-                if cv.contourArea(c) < 100:
+                if cv.contourArea(c) < 175:
                     continue
                 # Get bounding box
                 x, y, w, h = cv.boundingRect(c)
@@ -161,15 +210,17 @@ class CharSegmentation:
         kernel = np.ones((2, 2), np.float32) / 4
         char = cv.filter2D(char, -1, kernel)
 
-        # char = np.uint8((char>char.mean())*255)
-        # char = 255 - char
-        # re binarze image
-
         _ , char = cv.threshold(char, 0, 255, cv.THRESH_OTSU)
         char = 255 - char
 
         if debug:
             cv.imshow("pre clean char", char)
+            cv.waitKey()
+
+        kernel = np.ones((1, 2), np.uint8)
+        char = cv.erode(char, kernel, iterations=1)
+        if debug:
+            cv.imshow("erosion", char)
             cv.waitKey()
 
         # if its a skinny rectangle
@@ -198,7 +249,7 @@ class CharSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/rowan.jpg'
+    file = '../inputs/sample.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
@@ -212,25 +263,25 @@ if __name__ == "__main__":
     line_seg.prep()
     lines = line_seg.segment()
 
-    line = lines[0]
+    line = lines[1]
 
     # segment by word
     word_seg = WordSegmentation(line)
     word_seg.prep()
     words = word_seg.segment()
-    word = words[0]
+    word = words[3]
 
     char_seg = CharSegmentation(word)
     char_seg.prep()
     chars = char_seg.segment()
 
-    cnn = CNN(load=True)
-    cnn.load_data()
-
-    for char in chars:
-         char = char_seg.clean_char(char)
-         cv.imshow(label_to_letter[cnn.predict(char)+1], char.reshape(28,28))
-         cv.waitKey()
+    # cnn = CNN(load=True)
+    # cnn.load_data()
+    #
+    # for char in chars:
+    #      char = char_seg.clean_char(char)
+    #      cv.imshow(label_to_letter[cnn.predict(char)+1], char.reshape(28,28))
+    #      cv.waitKey()
 
 
 
