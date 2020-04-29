@@ -25,6 +25,7 @@ class CharSegmentation:
         gray = cv.filter2D(gray, -1, kernel)
 
         if debug:
+            cv.imwrite('../outputs/gray.jpg',gray)
             cv.imshow("gray", gray)
             cv.waitKey()
 
@@ -33,39 +34,45 @@ class CharSegmentation:
         self.bw = 255 - self.bw
 
         if debug:
+            cv.imwrite('../outputs/bw.jpg',self.bw)
             cv.imshow("bw",self.bw)
             cv.waitKey()
 
     def segment(self):
         # dilate each component of the image vertically so that each character
         # becomes a single connected component for bounding boxes
-        kernel = np.ones((3, 2), np.uint8)
+        kernel = np.ones((2, 2), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
-           cv.imshow("dilate", dilate)
-           cv.waitKey()
+            cv.imwrite('../outputs/dilate.jpg', dilate)
+            cv.imshow("dilate", dilate)
+            cv.waitKey()
 
-        kernel = np.ones((4,4))
+        # fill in gaps of letters
+        kernel = np.ones((5,5))
         closing = cv.morphologyEx(dilate, cv.MORPH_CLOSE, kernel)
 
         if debug:
-           cv.imshow("closing", closing)
-           cv.waitKey()
+            cv.imwrite('../outputs/closing.jpg',closing)
+            cv.imshow("closing", closing)
+            cv.waitKey()
 
+        # thinning of letters down to about 1 pixel
         kernel = np.ones((5, 5), np.uint8)
         erosion = cv.erode(closing, kernel, iterations=1)
 
         if debug:
+            cv.imwrite('../outputs/erosion.jpg',erosion)
             cv.imshow("erosion", erosion)
             cv.waitKey()
 
         # lists to store x values and corresponding widths
         xs = []
         ws = []
+
         # create a frequency histogram by column
         hist = np.count_nonzero(erosion, axis=0).tolist()
-        print(hist)
 
         if debug:
             plt.plot(range(0, np.array(hist).shape[0]),np.array(hist))
@@ -99,35 +106,19 @@ class CharSegmentation:
                 i = j+1
             i += 1
 
-
-            # if hist[i] > 1:
-            #     xs.append(i)
-            #     j = i
-            #     w = 0
-            #     # find the width of the char
-            #     while j < len(hist) and (hist[j] > 1):
-            #         w += 1
-            #         j += 1
-            #     ws.append(w)
-            #     i += w
-            # i += 1
-
         # get rid of the extra last x value its just the end of the word
         xs.pop()
-
-        # print(len(xs))
-        # print(len(ws))
-        # print(xs)
-        # print(ws)
 
         # loop through calculated x's and widths of chars and box them
         for i in range(len(xs)):
             self.hist_chars.append(self.word[0:dilate.shape[0], xs[i]:xs[i]+ws[i]])
 
             if debug:
+                cv.imwrite(f'../outputs/hist_char{i}.jpg', self.hist_chars[i])
                 cv.imshow("hist chars", self.hist_chars[i])
                 cv.waitKey()
 
+        i = 0
         # re bound the char boxes to get correct y values
         for char in self.hist_chars:
             # grey scale and blur the char
@@ -140,6 +131,7 @@ class CharSegmentation:
             bw_char = 255 - bw_char
 
             if debug:
+                cv.imwrite(f'../outputs/bw_single{i}.jpg', bw_char)
                 cv.imshow("bw single char", bw_char)
                 cv.waitKey()
 
@@ -148,7 +140,8 @@ class CharSegmentation:
             dilate = cv.dilate(bw_char, kernel, iterations=1)
 
             if debug:
-                cv.imshow("dilate single char", bw_char)
+                cv.imwrite(f'../outputs/dilate_single{i}.jpg', dilate)
+                cv.imshow("dilate single char", dilate)
                 cv.waitKey()
 
             # find components
@@ -156,15 +149,17 @@ class CharSegmentation:
 
             for c in components:
                 # skip small boxes
-                if cv.contourArea(c) < 175:
+                if cv.contourArea(c) < 150:
                     continue
                 # Get bounding box
                 x, y, w, h = cv.boundingRect(c)
                 # Getting char image
                 self.chars.append(char[y:y + h, x:x + w])
                 cv.rectangle(char, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            i += 1
 
         if debug:
+            cv.imwrite('../outputs/boxed.jpg',self.word)
             cv.imshow("boxed", self.word)
             cv.waitKey()
 
@@ -177,6 +172,7 @@ class CharSegmentation:
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
+            cv.imwrite('../outputs/dilate.jpg',dilate)
             cv.imshow("dilate", dilate)
             cv.waitKey()
 
@@ -197,6 +193,7 @@ class CharSegmentation:
             cv.rectangle(self.word, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         if debug:
+            cv.imwrite('../outputs/boxed.jpg',self.word)
             cv.imshow("boxed", self.word)
             cv.waitKey()
 
@@ -210,16 +207,23 @@ class CharSegmentation:
         kernel = np.ones((2, 2), np.float32) / 4
         char = cv.filter2D(char, -1, kernel)
 
+        if debug:
+            cv.imwrite('../outputs/clean_gray.jpg', char)
+
         _ , char = cv.threshold(char, 0, 255, cv.THRESH_OTSU)
         char = 255 - char
 
         if debug:
+            cv.imwrite('../outputs/clean_bw.jpg', char)
             cv.imshow("pre clean char", char)
             cv.waitKey()
 
+        # thin characters again, gets better accuracy
         kernel = np.ones((1, 2), np.uint8)
         char = cv.erode(char, kernel, iterations=1)
+
         if debug:
+            cv.imwrite('../outputs/clean_thin.jpg', char)
             cv.imshow("erosion", char)
             cv.waitKey()
 
@@ -269,19 +273,22 @@ if __name__ == "__main__":
     word_seg = WordSegmentation(line)
     word_seg.prep()
     words = word_seg.segment()
-    word = words[3]
+    word = words[0]
 
     char_seg = CharSegmentation(word)
     char_seg.prep()
     chars = char_seg.segment()
 
-    # cnn = CNN(load=True)
-    # cnn.load_data()
-    #
-    # for char in chars:
-    #      char = char_seg.clean_char(char)
-    #      cv.imshow(label_to_letter[cnn.predict(char)+1], char.reshape(28,28))
-    #      cv.waitKey()
+    cnn = CNN(load=True)
+    cnn.load_data()
+
+    i = 0
+    for char in chars:
+         char = char_seg.clean_char(char)
+         cv.imwrite(f'../outputs/clean_char{i}.jpg', char.reshape(28,28))
+         cv.imshow(label_to_letter[cnn.predict(char)+1], char.reshape(28,28))
+         cv.waitKey()
+         i+=1
 
 
 

@@ -5,6 +5,7 @@ from char_segmentation import CharSegmentation
 from cnn import CNN
 from data import label_to_letter
 import cv2 as cv
+from autocorrect import Speller
 import numpy as np
 
 show = False
@@ -50,7 +51,7 @@ class OCR:
                 # segment each word by its character
                 char_seg = CharSegmentation(word)
                 char_seg.prep()
-                chars = char_seg.segment()
+                chars = char_seg.segment_old()
 
                 word = ""
                 for char in chars:
@@ -68,11 +69,17 @@ class OCR:
                 output += word + " "
             output += "\n"
 
-        return output
+        output = output.strip().split(' ')
+        spell = Speller()
+        new_line = ""
+        for l in output:
+            new_line += spell(l) + " "
+
+        return new_line
 
 
 if __name__ == "__main__":
-    file = '../inputs/sample.jpg'
+    file = '../inputs/lower-alphabet.jpg'
     ocr = OCR(file=file)
     text = ocr.text()
     print(text)

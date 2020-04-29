@@ -19,6 +19,7 @@ class WordSegmentation:
         gray = cv.filter2D(gray, -1, kernel)
 
         if debug:
+            cv.imwrite('../outputs1/gray.jpg',gray)
             cv.imshow("gray", gray)
             cv.waitKey()
 
@@ -27,13 +28,16 @@ class WordSegmentation:
         self.bw = 255 - self.bw
 
         if debug:
+            cv.imwrite('../outputs1/bw.jpg',self.bw)
             cv.imshow("bw",self.bw)
             cv.waitKey()
 
+        # remove noise from image (necessary for high quality camera)
         kernel = np.ones((4,4))
         self.bw = cv.morphologyEx(self.bw, cv.MORPH_OPEN, kernel)
 
         if debug:
+            cv.imwrite('../outputs1/denoise.jpg',self.bw)
             cv.imshow("de noise", self.bw)
             cv.waitKey()
 
@@ -45,6 +49,7 @@ class WordSegmentation:
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
+            cv.imwrite('../outputs1/dilate.jpg',dilate)
             cv.imshow("dilate", dilate)
             cv.waitKey()
 
@@ -65,6 +70,7 @@ class WordSegmentation:
             if debug: cv.rectangle(self.line, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         if debug:
+            cv.imwrite('../outputs1/img.jpg',self.line)
             cv.imshow("boxed", self.line)
             cv.waitKey()
 
@@ -72,7 +78,7 @@ class WordSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/ocr.jpg'
+    file = '../inputs/sample.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
@@ -92,6 +98,9 @@ if __name__ == "__main__":
     word_seg = WordSegmentation(line)
     word_seg.prep()
     words = word_seg.segment()
-    # for word in words:
-    #     cv.imshow("word",word)
-    #     cv.waitKey()
+    i = 0
+    for word in words:
+        cv.imwrite(f'../outputs/word{i}.jpg', word)
+        cv.imshow("word",word)
+        cv.waitKey()
+        i+=1
