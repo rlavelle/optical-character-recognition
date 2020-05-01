@@ -5,6 +5,7 @@ from image_preprocess import PreProcess
 debug = False
 write = False
 
+
 class LineSegmentation:
     def __init__(self, img):
         self.img = img

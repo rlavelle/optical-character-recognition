@@ -11,6 +11,7 @@ import math
 debug = False
 write = False
 
+
 class CharSegmentation:
     def __init__(self, word):
         self.word = word
