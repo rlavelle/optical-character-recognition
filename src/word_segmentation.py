@@ -46,7 +46,6 @@ class WordSegmentation:
         # dilate each component of the image vertically and slightly horizontally
         # so that each word becomes a single connected component for bounding boxes
         kernel = np.ones((100, 25), np.uint8)
-        #kernel = np.ones((100, 5), np.uint8)
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:

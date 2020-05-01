@@ -51,7 +51,7 @@ class OCR:
                 # segment each word by its character
                 char_seg = CharSegmentation(word)
                 char_seg.prep()
-                chars = char_seg.segment_old()
+                chars = char_seg.segment()
 
                 word = ""
                 for char in chars:
