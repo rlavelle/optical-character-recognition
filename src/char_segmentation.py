@@ -9,7 +9,7 @@ from data import label_to_letter
 import math
 
 debug = False
-
+write = False
 
 class CharSegmentation:
     def __init__(self, word):
@@ -25,7 +25,7 @@ class CharSegmentation:
         gray = cv.filter2D(gray, -1, kernel)
 
         if debug:
-            cv.imwrite('../outputs/gray.jpg',gray)
+            if write: cv.imwrite('../outputs/gray.jpg',gray)
             cv.imshow("gray", gray)
             cv.waitKey()
 
@@ -34,7 +34,7 @@ class CharSegmentation:
         self.bw = 255 - self.bw
 
         if debug:
-            cv.imwrite('../outputs/bw.jpg',self.bw)
+            if write: cv.imwrite('../outputs/bw.jpg',self.bw)
             cv.imshow("bw",self.bw)
             cv.waitKey()
 
@@ -45,7 +45,7 @@ class CharSegmentation:
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
-            cv.imwrite('../outputs/dilate.jpg', dilate)
+            if write: cv.imwrite('../outputs/dilate.jpg', dilate)
             cv.imshow("dilate", dilate)
             cv.waitKey()
 
@@ -54,7 +54,7 @@ class CharSegmentation:
         closing = cv.morphologyEx(dilate, cv.MORPH_CLOSE, kernel)
 
         if debug:
-            cv.imwrite('../outputs/closing.jpg',closing)
+            if write: cv.imwrite('../outputs/closing.jpg',closing)
             cv.imshow("closing", closing)
             cv.waitKey()
 
@@ -63,7 +63,7 @@ class CharSegmentation:
         erosion = cv.erode(closing, kernel, iterations=1)
 
         if debug:
-            cv.imwrite('../outputs/erosion.jpg',erosion)
+            if write: cv.imwrite('../outputs/erosion.jpg',erosion)
             cv.imshow("erosion", erosion)
             cv.waitKey()
 
@@ -114,7 +114,7 @@ class CharSegmentation:
             self.hist_chars.append(self.word[0:dilate.shape[0], xs[i]:xs[i]+ws[i]])
 
             if debug:
-                cv.imwrite(f'../outputs/hist_char{i}.jpg', self.hist_chars[i])
+                if write: cv.imwrite(f'../outputs/hist_char{i}.jpg', self.hist_chars[i])
                 cv.imshow("hist chars", self.hist_chars[i])
                 cv.waitKey()
 
@@ -131,7 +131,7 @@ class CharSegmentation:
             bw_char = 255 - bw_char
 
             if debug:
-                cv.imwrite(f'../outputs/bw_single{i}.jpg', bw_char)
+                if write: cv.imwrite(f'../outputs/bw_single{i}.jpg', bw_char)
                 cv.imshow("bw single char", bw_char)
                 cv.waitKey()
 
@@ -140,7 +140,7 @@ class CharSegmentation:
             dilate = cv.dilate(bw_char, kernel, iterations=1)
 
             if debug:
-                cv.imwrite(f'../outputs/dilate_single{i}.jpg', dilate)
+                if write: cv.imwrite(f'../outputs/dilate_single{i}.jpg', dilate)
                 cv.imshow("dilate single char", dilate)
                 cv.waitKey()
 
@@ -172,7 +172,7 @@ class CharSegmentation:
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
-            cv.imwrite('../outputs/dilate.jpg',dilate)
+            if write: cv.imwrite('../outputs/dilate.jpg',dilate)
             cv.imshow("dilate", dilate)
             cv.waitKey()
 
@@ -193,7 +193,7 @@ class CharSegmentation:
             cv.rectangle(self.word, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         if debug:
-            cv.imwrite('../outputs/boxed.jpg',self.word)
+            if write: cv.imwrite('../outputs/boxed.jpg',self.word)
             cv.imshow("boxed", self.word)
             cv.waitKey()
 
@@ -203,18 +203,18 @@ class CharSegmentation:
         # gray scale
         char = cv.cvtColor(char, cv.COLOR_RGB2GRAY)
 
-        #blurr image and threshold
+        # blurr image and threshold
         kernel = np.ones((2, 2), np.float32) / 4
         char = cv.filter2D(char, -1, kernel)
 
-        if debug:
+        if write:
             cv.imwrite('../outputs/clean_gray.jpg', char)
 
         _ , char = cv.threshold(char, 0, 255, cv.THRESH_OTSU)
         char = 255 - char
 
         if debug:
-            cv.imwrite('../outputs/clean_bw.jpg', char)
+            if write: cv.imwrite('../outputs/clean_bw.jpg', char)
             cv.imshow("pre clean char", char)
             cv.waitKey()
 
@@ -223,7 +223,7 @@ class CharSegmentation:
         char = cv.erode(char, kernel, iterations=1)
 
         if debug:
-            cv.imwrite('../outputs/clean_thin.jpg', char)
+            if write: cv.imwrite('../outputs/clean_thin.jpg', char)
             cv.imshow("erosion", char)
             cv.waitKey()
 
@@ -285,7 +285,7 @@ if __name__ == "__main__":
     i = 0
     for char in chars:
          char = char_seg.clean_char(char)
-         cv.imwrite(f'../outputs/clean_char{i}.jpg', char.reshape(28,28))
+         if write: cv.imwrite(f'../outputs/clean_char{i}.jpg', char.reshape(28,28))
          cv.imshow(label_to_letter[cnn.predict(char)+1], char.reshape(28,28))
          cv.waitKey()
          i+=1

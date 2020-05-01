@@ -3,7 +3,7 @@ import numpy as np
 from image_preprocess import PreProcess
 
 debug = False
-
+write = False
 
 class LineSegmentation:
     def __init__(self, img):
@@ -18,7 +18,7 @@ class LineSegmentation:
         gray = cv.filter2D(gray, -1, kernel)
 
         if debug:
-            cv.imwrite('../outputs/gray.jpg',gray)
+            if write: cv.imwrite('../outputs/gray.jpg',gray)
             cv.imshow("gray", gray)
             cv.waitKey()
 
@@ -27,7 +27,7 @@ class LineSegmentation:
         self.bw = 255 - self.bw
 
         if debug:
-            cv.imwrite('../outputs/bw.jpg',self.bw)
+            if write: cv.imwrite('../outputs/bw.jpg',self.bw)
             cv.imshow("bw", self.bw)
             cv.waitKey()
 
@@ -38,7 +38,7 @@ class LineSegmentation:
         dilate = cv.dilate(self.bw, kernel, iterations=1)
 
         if debug:
-            cv.imwrite('../outputs/dilate.jpg',dilate)
+            if write: cv.imwrite('../outputs/dilate.jpg',dilate)
             cv.imshow("dilate", dilate)
             cv.waitKey()
 
@@ -59,7 +59,7 @@ class LineSegmentation:
             if debug: cv.rectangle(self.img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         if debug:
-            cv.imwrite('../outputs/img.jpg',self.img)
+            if write: cv.imwrite('../outputs/img.jpg',self.img)
             cv.imshow("boxed", self.img)
             cv.waitKey()
 
@@ -83,6 +83,6 @@ if __name__ == "__main__":
 
     line = lines[0]
 
-    cv.imwrite('../outputs/line.jpg', line)
+    if write: cv.imwrite('../outputs/line.jpg', line)
     cv.imshow("line",line)
     cv.waitKey()
