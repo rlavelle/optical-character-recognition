@@ -68,7 +68,7 @@ class LineSegmentation:
 
 
 if __name__ == "__main__":
-    file = '../inputs/sample.jpg'
+    file = '../inputs/paragraph.jpg'
 
     # pre process the image
     preproc = PreProcess(file)
