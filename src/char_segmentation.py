@@ -39,7 +39,7 @@ class CharSegmentation:
             cv.imshow("bw",self.bw)
             cv.waitKey()
 
-    def segment(self):
+    def segment_method2(self):
         # dilate each component of the image vertically so that each character
         # becomes a single connected component for bounding boxes
         kernel = np.ones((2, 2), np.uint8)
@@ -166,7 +166,7 @@ class CharSegmentation:
 
         return self.chars
 
-    def segment_old(self):
+    def segment_method1(self):
         # dilate each component of the image vertically so that each character
         # becomes a single connected component for bounding boxes
         kernel = np.ones((15, 2), np.uint8)
@@ -278,7 +278,7 @@ if __name__ == "__main__":
 
     char_seg = CharSegmentation(word)
     char_seg.prep()
-    chars = char_seg.segment()
+    chars = char_seg.segment_method1()
 
     cnn = CNN(load=True)
     cnn.load_data()
