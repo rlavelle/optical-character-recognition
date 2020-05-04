@@ -51,7 +51,7 @@ class OCR:
                 # segment each word by its character
                 char_seg = CharSegmentation(word)
                 char_seg.prep()
-                chars = char_seg.segment()
+                chars = char_seg.segment_method1()
 
                 word = ""
                 for char in chars:
@@ -79,7 +79,7 @@ class OCR:
 
 
 if __name__ == "__main__":
-    file = '../inputs/paragraph.jpg'
+    file = '../inputs/intro.jpg'
     ocr = OCR(file=file)
     text = ocr.text()
     print(text)
