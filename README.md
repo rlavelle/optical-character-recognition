@@ -7,13 +7,13 @@ Program to decode handwritten documents into a machine readable format.
 Make sure you are using python3.6 (highest version of python tensorflow works with). Create a virtual environment by running:
 
 ```
-python3.6 -m venv venv
+python3.6 -m venv env
 ```
 
 Once the environment is created run:
 
 ```
-source venv/bin/activate
+source env/bin/activate
 ```
 
 Then go ahead an install the requirements:
