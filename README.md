@@ -1,107 +1,46 @@
 # optical-character-recognition
 
-run ocr.py after installing packages for sample output
+Program to decode handwritten documents into a machine readable format.
 
-## PACKAGES
+### requirements
 
---- ! use virtual env and run python3 -m pip install -r requirements.txt) ! --
+Make sure you are using python3.6 (highest version of python tensorflow works with). Create a virtual environment by running:
 
-opencv-python==4.2.0.34
+```
+python3.6 -m venv venv
+```
 
-numpy==1.17.2
+Once the environment is created run:
 
-matplotlib==3.0.1
+```
+source venv/bin/activate
+```
 
-autocorrect==1.1.0
+Then go ahead an install the requirements:
 
-idx2numpy==1.2.2
+```
+python3.6 -m pip install --upgrade pip
+python3.6 -m pip install -r requirements.txt
+```
 
-tensorflow==2.1.0
+### running the program
 
-## INFO:
+If you want to see a sample output run (make sure you are in the src directory):
 
-File structure is contained the the folders data, inputs and src
+```
+python3.6 ocr.py
+```
 
-## DATA/
+This may take a second due to tensorflow loading in the model, but you should see the text for a sample image displayed in the terminal, then opencv will display the image with the bounding boxes. press any key to get back to the terminal (while the opencv image is in focus) if the image displayed is not in focus, click on the running python process in your dock to bring it up.
 
-data contains the EMNIST data set in byte form
+If you would like to test your own image do the following:
+1. take the image, and make sure it is rotated 90 degrees clockwise (in the future I plan to add detection for image orientation but for now this is hardcoded)
+2. place your image in the inputs folder
+3. run `python3.6 ocr.py image-name.extension
 
-## INPUTS/
+Where image-name is the name of your image, and extension is either .jpg or .png
 
-inputs contains inputs images that you can test
+### Optimizations
 
--- if you want to test an input image yourself make sure it meets the following assumptions:
-
--- * image is taken rotated 90 degrees clockwise (preprocess rotates image counter clockwise at the start)
-
--- * your image is in this inputs forlder
-
-src contains the code and model
-
-! For all files with output press any key to skip to next picture
-
-## SRC/
-
-* model is stored in the trained\_model folder
-
-#### data.py
-
--- * file for preprocessing data for CNN
-
--- * if you run this file you can see examples of the letter 'r' from the data set
-
-
-#### cnn.py
-
--- * class file for the convolutional neural network
-
--- * if you run this file it loads in the current model and prints the accuracy 
-
-
-#### image\_preprocess.py
-
--- * class to preprocess an image (rotation and resize)
-
--- * no main method for this file
-
-
-#### line\_segmentation.py
-
--- * class to preform line segmentation
-
--- * set debug to true to see process of segmentation
-
--- * if you run this file it runs through a sample input for line segmentation
-
-
-#### word\_segmentation.py
-
--- * class to preform word segmnetation 
-
--- * set debug to true to see process of segmentation
-
--- * if you run this file it runs through a sample input for word segmentation
-
-
-#### char\_segmentation
-
--- * class to preform character segmentation in 2 different ways
-
--- * the segment\_method2() function is the method based of cursive
-
--- * the segment\_method1() function is the method based off connected components 
-
--- * set debug to true to see process of segmentation
-
--- * if you run this file it shows the process for segmenting a sample word
-
-
-#### ocr.py
-
--- * class to preform the overall algorithm to generate a document
-
--- * set show to true to see over all process
-
--- * if you run this file it gives a sample output for the algorithm
-
--- * shows the segmented document, and prints out the text in the terminal
+- In the future I would like to firstly add image orientation detection, so that the input images do not have to strictly be rotated 90 degrees for input
+- I would also like to attempt to use a better character segmentation method. If possible I would like to find a data set of words segmented with bounding boxes, and train a CNN to do the segmentation for me
