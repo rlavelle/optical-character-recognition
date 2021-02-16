@@ -7,6 +7,7 @@ from data import label_to_letter
 import cv2 as cv
 from autocorrect import Speller
 import numpy as np
+import sys
 
 show = False
 
@@ -79,7 +80,10 @@ class OCR:
 
 
 if __name__ == "__main__":
-    file = '../inputs/intro.jpg'
+    if len(sys.argv) != 2:
+        file = f'../inputs/intro.jpg'
+    else:
+        file = f'../inputs/{sys.argv[1]}'
     ocr = OCR(file=file)
     text = ocr.text()
     print(text)
