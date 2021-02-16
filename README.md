@@ -2,7 +2,7 @@
 
 Program to decode handwritten documents into a machine readable format.
 
-### requirements
+## requirements
 
 Make sure you are using python3.6 (highest version of python tensorflow works with). Create a virtual environment by running:
 
@@ -23,7 +23,7 @@ python3.6 -m pip install --upgrade pip
 python3.6 -m pip install -r requirements.txt
 ```
 
-### running the program
+## running the program
 
 If you want to see a sample output run (make sure you are in the src directory):
 
@@ -40,7 +40,7 @@ If you would like to test your own image do the following:
 
 Where image-name is the name of your image, and extension is either .jpg or .png
 
-### Optimizations
+## Optimizations
 
 - In the future I would like to firstly add image orientation detection, so that the input images do not have to strictly be rotated 90 degrees for input
 - I would also like to attempt to use a better character segmentation method. If possible I would like to find a data set of words segmented with bounding boxes, and train a CNN to do the segmentation for me
